@@ -1,0 +1,41 @@
+metro_area,date,avg_income_household
+Chicago,2021,93200
+Chicago,2020,91000
+Chicago,2019,89100
+Chicago,2018,84600
+Chicago,2017,79000
+Denver,2021,104800
+Denver,2020,100000
+Denver,2019,92800
+Denver,2018,89900
+Denver,2017,83900
+Des Moines,2021,91300
+Des Moines,2020,89200
+Des Moines,2019,88000
+Des Moines,2018,79600
+Des Moines,2017,82200
+Kansas City,2021,86600
+Kansas City,2020,86000
+Kansas City,2019,82700
+Kansas City,2018,80000
+Kansas City,2017,74800
+Madison,2021,103100
+Madison,2020,100100
+Madison,2019,100400
+Madison,2018,91700
+Madison,2017,85200
+Minneapolis,2021,104900
+Minneapolis,2020,103400
+Minneapolis,2019,100000
+Minneapolis,2018,94300
+Minneapolis,2017,90400
+Oklahoma City,2021,73200
+Oklahoma City,2020,74400
+Oklahoma City,2019,73800
+Oklahoma City,2018,69400
+Oklahoma City,2017,67300
+Toledo,2021,70400
+Toledo,2020,71900
+Toledo,2019,68900
+Toledo,2018,67200
+Toledo,2017,61500
