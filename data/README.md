@@ -59,24 +59,18 @@ for state in dict_metro_market:
         zillow_table.to_csv(f"{output_path}/{file_name}")
 ```
 ---
-# Glob Functionality
 
-To compile our data we used Glob function.  In Python, the glob module is used to retrieve files/pathnames matching a specified pattern. The pattern rules of glob follow standard Unix path expansion rules. According to benchmarks it is faster than other methods to match pathnames in directories.  We can use the function glob.glob() or glob.iglob() directly from glob module to retrieve paths recursively from inside the directories/files and subdirectories/subfiles.
+## Glob Functionality
+
+To compile our data we used Glob function.  In Python, the glob module is used to retrieve files/pathnames matching a specified pattern. The pattern rules of glob follow standard Unix path expansion rules. It is also predicted that according to benchmarks it is faster than other methods to match pathnames in directories.  We can use the function glob.glob() or glob.iglob() directly from glob module to retrieve paths recursively from inside the directories/files and subdirectories/subfiles.
 
 ---
 
 ## Seasonality 
-Determine the seasonality for each metro area by reading in the Inventory CVS's for each Metro Area
+Determine the seasonality for each metro area
+![Seasonal Effects on Housing Inventory]()
 
-```python
-all_df = pd.concat(dfs)
-all_df.head()
-```
-Which resulted in the below Scatter Plot
-
-![Seasonal Effects on Housing Inventory](./images/Seasonality_Trend_Scatter_Plot.png)
-
-From the Scatter plot above we determined that the further north the metro the more noticable trends in total inventory of housing.  Below is a synopsis of each metro area:
+The further north the metro we see there is more noticable trends in total inventory of housing. Evaluating each metro area:
 >1. Chicago: Is the largest of the metros and has the largest inventroy overall.  Inventory ramps up in the second quarter hits it peak in the third quarter slows in the forth and continues to decline through the first quarter of the next year.
 >2. Denver: The market in Denver is similar to Chicago with inventory increase in the second quarter, peaking in the third quarter and declining in the fourth quarter into the next year.
 >3. Des Moines: From the end of 2017 through June of 2020 Des Mois=nes saw the same seasonality as the other cities; however, since invetory has decreased signifiantly and has stayed low the last 18 months.
@@ -86,38 +80,12 @@ From the Scatter plot above we determined that the further north the metro the m
 >7. Oklahoma City: Oklahoma City is the southern most metro and reflects the least seasonality of all the markets.  Again, invetory has dipped since February of 2020 and hasn't rebounded since.
 >8. Toledo:  Toledo is the smallest market there is some seasonality but noticable as most of the other markets.  Toledo has also seen a decrease in inventroy since February of 2020 and rebounded similar to Oklahoma City.
 
-Additionally, we wanted to understand if there were any correlation between inventory and listing price.  To accomplish this we read in the Inventory DataFrame and List Price DataFrame and plotted each onto a line chart.  
+We then wanted to determine if there was a Correlation between list price of homes and inventory
 
-```python
-path =r'C:/Users/Users/kd_84/Working/Project 1/UMN_Project1/correlation_files'
-filenames = glob.glob(path + "/*Inventory.csv")
+![Seasonality of Inventory](./images/Seasonality_Inventory.png)
+![Seasonality of Home Prices](./images/Seasonality_Prices.png)
 
-inv_dfs = []
-for filename in filenames:
-    inv_dfs.append(pd.read_csv(filename))
-    
-#concat
-inventory = pd.concat(inv_dfs)
-inventory = inventory.sort_values(by='date')
-
-path =r'C:/Users/kd_84/Working/Project 1/UMN_Project1/correlation_files'
-filenames = glob.glob(path + "/*Price.csv")
-
-price_dfs = []
-for filename in filenames:
-    price_dfs.append(pd.read_csv(filename))
-
-#concat
-prices = pd.concat(price_dfs)
-prices = prices.sort_values(by='date')
-prices = prices.rename(columns={'value':'Price'})
-```
-
-![Inventory Seasonality](./images/Seasonality_Inventory.png)
-![Pricing Seasonality](./images/Seasonality_Prices.png)
-
-
-We found that there is a correlation with inventory of homes and the listing price.  In every metro area when inventory is low the listing prices are high as well as when inventory is high the listing prices lower. 
+We found that there is a correlation with inventory of homes and the listing prices.  In every metro area when inventory is low the listing prices are high as well as when inventory is high the listing prices lower.
 
 ---
 
@@ -155,7 +123,9 @@ From 2008 to 2015 home sale prices stayed realtively flat with small increases e
 > 7. Madison: Madison home prices stayed realtively flat from 2008 to 2014 and has steadily rose since.  Home prices have seen a steeper increase in prices over the last 18 months.
 > 8. Des Moines: Des Moines home prices stayed relatively flat from 2008 to 2012 and since has steadily rose since.
 
-Secondly we looked at the affordability of each city in comparison with the median income of those markets.  From the United States Census we were able to find the median family income for the 8 metro areas from 2017 through 2021
+Secondly we looked at the affordability of each city in comparison with the median income of those markets.
+
+From the United States Census we were able to find the median family income for the 8 metro areas from 2017 through 2021
 
 ```python
 # Reading Median Family Income csv
@@ -164,7 +134,7 @@ family_income = pd.read_csv(median_family_income_csv, infer_datetime_format=True
 family_income.head(8)
 ```
 
-We merged the meidan family income dataframe with the Average Increase in Home Prices dataframe 
+Then we merged the meidan family income dataframe with the combined final dataframe 
 
 ```python
 # combine dataframes
@@ -201,16 +171,7 @@ joined['Price_Income'] = (joined['value']/joined['avg_income_household'])
 | 2017-12-31 | Oklahoma City | 166688 |                67300 |            2 |
 | 2017-12-31 |        Toledo | 118300 |                61500 |            2 |
 
+
 ![Price to Income](./images/Price_to_Income.png)
 
-Year over year the most expensive market to live in was Denver and the least expesnive market was Toledo.  In 2021, Madison and Minneapolis saw the price to income ratio jump above 3 due to increases in home prices.
-
----
-
-## Compare the list and sale price to find if buyers are buying at a premium or getting a discount
-
----
-
-# Problems that arised
-
-The main issue that we needed to resolve was working with GitHub, creating branches and push our local branches to the the GitHub repo.
+Year over year the most expensive market to live in was Denver and the least expensive market was Toledo.  In 2021, Madison and Minneapolis saw the price to income ratio jump above 3 due to increases in home prices.
