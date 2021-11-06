@@ -35,7 +35,7 @@ Servontius Turner
 
 ![zillowLogo](./images/zillowLogo.png)
 
-For our project, we sourced our data from Zillow.com one of the nations largest third party Real Estate sites. We chose Zillow  for this reason and that it is one of the only Real Estate firms that offer and maintain a free API on listings. Real Estate does not (yet) have a central API to allow prospective analysts access to Real Estate information. Alot of provided APIs require the company to be a registered MLS company which requires a fee as well as a fee to access the API. Zillow offers a free API through Quandl as well as a more indepth and free API through a company called Bridge.
+For our project, we sourced our data from Zillow.com one of the nations largest third party Real Estate sites. We chose Zillow  for this reason and that it is one of the only Real Estate firms that offer and maintains a free API on listings. Real Estate does not (yet) have a central API to allow prospective analysts access to Real Estate information. Alot of provided APIs require the company to be a registered MLS company which requires a fee as well as a fee to access the API. Zillow offers a free API through Quandl as well as a more indepth and free API through a company called Bridge.
 
 From the Quandl API we created multiple CSV files.  To create the files we defined the Metro Area by region ID and then defined indicator IDs for Inventory, Sale Price and List Price.  We then created a function for calling the data with the API to make the file creation easier
 
@@ -58,55 +58,68 @@ for state in dict_metro_market:
         })
         zillow_table.to_csv(f"{output_path}/{file_name}")
 ```
+
+## Glob Functionality
+
 ---
-# Glob Functionality
 
 To compile our data we used Glob function.  In Python, the glob module is used to retrieve files/pathnames matching a specified pattern. The pattern rules of glob follow standard Unix path expansion rules. According to benchmarks it is faster than other methods to match pathnames in directories.  We can use the function glob.glob() or glob.iglob() directly from glob module to retrieve paths recursively from inside the directories/files and subdirectories/subfiles.
 
+
+## Does Seasonality impact inventory and sale prices 
+
 ---
 
-## Seasonality 
 Determine the seasonality for each metro area by reading in the Inventory CVS's for each Metro Area
 
 ```python
+# Set the path for the csv files
+path =r'C:/Users/kd_84/Working/Project 1/UMN_Project1/data'
+filenames = glob.glob(path + "/*_Inventory.csv")
+# Create dataframe for Inventory
+dfs = []
+for filename in filenames:
+    dfs.append(pd.read_csv(filename))
 all_df = pd.concat(dfs)
 all_df.head()
+# Create Scatter Plot to show seasonality of Inventory
+px.scatter(
+    all_df,
+    x="date",
+    y="value",
+    size='value',
+    color="metro_area",
+    title="Seasonality Trend"
+)
 ```
-Which resulted in the below Scatter Plot
 
-![Seasonal Effects on Housing Inventory](./images/Seasonality_Trend_Scatter_Plot.png)
+![Seasonal Effects on Housing Inventory](./images/Inventory_Seasonality.png)
 
-From the Scatter plot above we determined that the further north the metro the more noticable trends in total inventory of housing.  Below is a synopsis of each metro area:
->1. Chicago: Is the largest of the metros and has the largest inventroy overall.  Inventory ramps up in the second quarter hits it peak in the third quarter slows in the forth and continues to decline through the first quarter of the next year.
->2. Denver: The market in Denver is similar to Chicago with inventory increase in the second quarter, peaking in the third quarter and declining in the fourth quarter into the next year.
->3. Des Moines: From the end of 2017 through June of 2020 Des Mois=nes saw the same seasonality as the other cities; however, since invetory has decreased signifiantly and has stayed low the last 18 months.
->4. Kansas City: Inventory was consistenly more steady than the ther metro areas but has a seen a steady decline in inventory since February 2020.
->5. Madison: Madison has seasonality trend consistent with Chicago and Denver but overall signifiantly less inventory than those markets.  
->6. Minneapolis: Has the same trends with inventory ramping up over the 2nd quarter, peaking in the third quarter and slowing declining the forth quarter into the next year.  Inventory decreased more noticably the end of 2020 and slowly increase over 2021.
->7. Oklahoma City: Oklahoma City is the southern most metro and reflects the least seasonality of all the markets.  Again, invetory has dipped since February of 2020 and hasn't rebounded since.
->8. Toledo:  Toledo is the smallest market there is some seasonality but noticable as most of the other markets.  Toledo has also seen a decrease in inventroy since February of 2020 and rebounded similar to Oklahoma City.
+
+>1. From the Scatter plot above we determined that the further north the metro the more noticable trends in total inventory of housing.  
+>2. Overall most markets saw an increase in inventory in the second quater increasing throughout the summer and peaking at the end of the third quarter.  Inventory declines in the fourth quarter and continued to decrease through the first quarter of the next year. 
+>3. The smaller markets - Des Moines, Kansas City, Oklahoma City and Toledo all saw a significant decline in inventory beginning in early 2020, continued to decline throughout 2021 and hasn't rebounded yet.
 
 Additionally, we wanted to understand if there were any correlation between inventory and listing price.  To accomplish this we read in the Inventory DataFrame and List Price DataFrame and plotted each onto a line chart.  
 
 ```python
+# Set path for csv file
 path =r'C:/Users/Users/kd_84/Working/Project 1/UMN_Project1/correlation_files'
 filenames = glob.glob(path + "/*Inventory.csv")
-
+# Created the dataframe
 inv_dfs = []
 for filename in filenames:
     inv_dfs.append(pd.read_csv(filename))
-    
 #concat
 inventory = pd.concat(inv_dfs)
 inventory = inventory.sort_values(by='date')
-
+# Set path for csv file
 path =r'C:/Users/kd_84/Working/Project 1/UMN_Project1/correlation_files'
 filenames = glob.glob(path + "/*Price.csv")
-
+# Created the dataframe
 price_dfs = []
 for filename in filenames:
     price_dfs.append(pd.read_csv(filename))
-
 #concat
 prices = pd.concat(price_dfs)
 prices = prices.sort_values(by='date')
@@ -116,12 +129,13 @@ prices = prices.rename(columns={'value':'Price'})
 ![Inventory Seasonality](./images/Seasonality_Inventory.png)
 ![Pricing Seasonality](./images/Seasonality_Prices.png)
 
-
 We found that there is a correlation with inventory of homes and the listing price.  In every metro area when inventory is low the listing prices are high as well as when inventory is high the listing prices lower. 
+
+
+## Which Metro Areas are most affordable
 
 ---
 
-## Affordability
 First we looked at the increase in home prices from 2008 to 2021:
 ```python
 # Join all Metro Areas into a single DataFrame with columns for each City
@@ -145,15 +159,10 @@ sales_price = combined_final.plot.line(x='date', title="Average Sales Price", fi
 ```
 ![Increase In Home Prices](./images/Increase_In_Home_Prices.png)
 
-From 2008 to 2015 home sale prices stayed realtively flat with small increases each year.  Around 2016 sale prices have seen a steady increase in pricing.  A short synopsis for each city is listed below
-> 1. Toledo: Toledo has had the smallest increase in home prices over the last 14 years. It saw a significant decrease in value in March of 2014 followed by a significant incrase by August of 2014 and then steadily has increased since.
-> 2. Kansas City: Kansas City has seen a consistent incrase in home prices over the last 14 years. The graph doesn't reflect any sharp increase or decreases in home prices but seasonality seems to be a factor.  
-> 3. Oklahoma City: Oklahoma City has seen a consistent increase in home prices over the last 14 years. The graph doesn't reflect any sharp increase or decrease in home prices and seasonality seems to be less of a factor than Kansas City.
-> 4. Chicago:  Chicago saw a decrease in home prices from February 2008 to February 2012 then saw a sharp incrase in July 2012 and then a sharp drop again in February 2013.  Prices were on the rise but much more volitile than any other city.
-> 5. Minneapolis:  Minneapolis saw a slight decrease in prices from 2008 through 2012 but has seen a steady increase since. The increase seems higher than the other cities and has seen a sharp increase since January 2021.
-> 6. Denver: Denver has seen a steady increase in home prices over the last 14 years with a sharper increase in the last 5 years.  Denver home prices have consistently been the highest of all markets.
-> 7. Madison: Madison home prices stayed realtively flat from 2008 to 2014 and has steadily rose since.  Home prices have seen a steeper increase in prices over the last 18 months.
-> 8. Des Moines: Des Moines home prices stayed relatively flat from 2008 to 2012 and since has steadily rose since.
+>1. From 2008 to 2015 home sale prices stayed realtively flat with small increases each year.  Around 2016 sale prices have seen a steady increase in pricing.  A short synopsis for each city is listed below
+>2. Toledo is the smallest market and had the smallest increase in home prices over the last 14 years. Kansas City, Oklahoma City, Madison and Des Moines round out the remaining small markets and the increase in home sales were similar for all three - increasing slightly with a sharper increase in the last 18 months.
+>3. Chicago's home prices droped from 2008 to 2013 and have been on the risesince but it appears this housing market is much more volitile than any other city.  Minneapolis also saw a slight decrease in prices from 2008 through 2012 but has seen a steady increase since. The increase seems higher than the other cities and has seen a sharp increase since January 2021.
+>4. Denver has seen a steady increase in home prices over the last 14 years with a sharper increase in the last 5 years.  Denver home prices have consistently been the highest of all markets.
 
 Secondly we looked at the affordability of each city in comparison with the median income of those markets.  From the United States Census we were able to find the median family income for the 8 metro areas from 2017 through 2021
 
@@ -162,11 +171,7 @@ Secondly we looked at the affordability of each city in comparison with the medi
 median_family_income_csv = "Data/Median_Family_Income_edit.csv"
 family_income = pd.read_csv(median_family_income_csv, infer_datetime_format=True, parse_dates=True, index_col="date")
 family_income.head(8)
-```
 
-We merged the meidan family income dataframe with the Average Increase in Home Prices dataframe 
-
-```python
 # combine dataframes
 joined = pd.merge(annual_2, family_income, how="inner", on=["date", "metro_area"], sort=True, copy=True, indicator=False, validate=None)
 joined.head(8)
@@ -183,10 +188,8 @@ joined.head(8)
 | 2017-12-31 | Oklahoma City | 166688 |                67300 |   |
 | 2017-12-31 |        Toledo | 118300 |                61500 |   |
 
-To find the cost of living we divided the home price by average income to get the price to income ratio
-
 ```python
-# compute the price to income ratio
+# compute the home price to income ratio
 joined['Price_Income'] = (joined['value']/joined['avg_income_household'])
 # joined['Price_Income'] = joined.Price_Income.round(decimals=2)
 ```
@@ -205,12 +208,71 @@ joined['Price_Income'] = (joined['value']/joined['avg_income_household'])
 
 Year over year the most expensive market to live in was Denver and the least expesnive market was Toledo.  In 2021, Madison and Minneapolis saw the price to income ratio jump above 3 due to increases in home prices.
 
----
 
 ## Compare the list and sale price to find if buyers are buying at a premium or getting a discount
 
 ---
 
+```python
+# Set the path for the csv files
+data_path = r'./data/'
+sale_price_filenames = glob.glob(data_path + "/*_Sale_Price.csv")
+list_price_filenames = glob.glob(data_path + "/*_List_Price.csv")
+
+# Create two lists to be iterated through  to create the dataframe
+sale_price_list = []
+list_price_list = []
+
+# Loop through each file name and append it to the corresponding list
+for filename in sale_price_filenames:
+    sale_price_list.append(pd.read_csv(filename, index_col="date", parse_dates=True, infer_datetime_format=True))
+
+for filename in list_price_filenames:
+    list_price_list.append(pd.read_csv(filename, index_col='date', parse_dates=True, infer_datetime_format=True))
+
+# Create a new Dataframe by concatenating the data from each file in the list 
+df_sale_price = pd.concat(sale_price_list)
+df_list_price = pd.concat(list_price_list)
+
+# Drop the 'None' Column from teh Dataframes and change the Column Names
+#df_sale_price = df_sale_price.drop(columns=['None'])
+df_sale_price = df_sale_price.rename(columns={
+    'date': 'Date',
+    'value': 'Sale Price',
+    'metro_area': 'Region'
+})
+
+#df_list_price = df_list_price.drop(columns=['None'])
+df_list_price = df_list_price.rename(columns={
+    'date': 'Date',
+    'value': 'Listing Price',
+    'metro_area': 'Region'
+})
+
+# Create a new Column for the Year
+df_sale_price['Year'] = df_sale_price.index.year
+df_list_price['Year'] = df_list_price.index.year
+
+# Set the value of the column Year to 2018 through 2021 when Zillow data was accessible
+df_sale_price = df_sale_price['2018':'2021']
+df_list_price = df_list_price['2018':'2021']
+
+# Create Data visualization
+sale_price_plot = df_sale_price.hvplot.scatter(x='date', y='Sale Price', label="Median Sale Price", groupby='Region', rot=90).opts(yformatter="%.0f")
+list_price_plot = df_list_price.hvplot.scatter(x='date', y='Listing Price',label='Median List Price',groupby='Region',rot=90).opts(yformatter="%.0f")
+
+list_price_plot * sale_price_plot
+```
+![Increase In Home Prices](./images/Chicago_Premium_plot.png)
+![Increase In Home Prices](./images/Minneapolis_Premium_plot.png)
+![Increase In Home Prices](./images/Toledo_Premium_plot.png)
+
+Looking at the plot above, we can see that on average, houses on Zillow do not sell near their list price. This could be due to Zillow's (Now former) market strategy of purchasing a house, pricing it exponentially higher than market value hoping a potential purchaser will bite, and lowering the price continually until it sells(per (Investopedia)|(https://www.investopedia.com/articles/personal-finance/110615/why-zillow-free-and-how-it-makes-money.asp). This means that potential buyers are getting a deal on property. The only time we see that the gap between the sale price and list price is in Toledo. Potential buyers are still getting a deal, however the deals there are not always that great when compared to Minneapolis or Chicago where the gap between Sale Price and List price is consistently higher than the other states.
+
+
 # Problems that arised
 
-The main issue that we needed to resolve was working with GitHub, creating branches and push our local branches to the the GitHub repo.
+---
+
+>1. The main issue that we needed to resolve was working with GitHub fixing a merge conflict.  One of the local repos was pushed to the main branch instead of the individual branch.  This affected the data_collector.ipynb file and caused a merge conflict.  We resolved the merge conflicts in the GitHub GUI.  Once those were fixed we then pushed the correct files to Margee's local repo.
+>2. We would have like to create dataframe to predict future home prices, if the increase in prices in the last 18 months had any correlation with the COVID 19 pandemic and if potentailly there will be a market correction in the near future.
