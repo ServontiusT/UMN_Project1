@@ -274,5 +274,5 @@ Looking at the plot above, we can see that on average, houses on Zillow do not s
 
 ---
 
->1. The main issue that we needed to resolve was working with GitHub fixing a merge conflict.  One of the local repos was pushed to the main branch instead of the individual branch.  This affected the data_collector.ipynb file and caused a merge conflict.  We resolved the merge conflicts in the GitHub GUI.  Once those were fixed we then pushed the correct files to Margee's local repo.
+>1. The main issue that we needed to resolve was working with GitHub fixing a merge conflict.  One of the local repos was pushed to the main branch instead of the individual branch.  This affected the data_collector.ipynb file and caused a merge conflict.  We resolved the merge conflicts in the GitHub GUI.  Once those were fixed we then pushed the correct files to local repo.
 >2. We would have like to create dataframe to predict future home prices, if the increase in prices in the last 18 months had any correlation with the COVID 19 pandemic and if potentailly there will be a market correction in the near future.
