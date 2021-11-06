@@ -190,7 +190,7 @@ joined.head(8)
 
 ```python
 # compute the home price to income ratio
-joined['Price_Income'] = (joined['value']/joined['avg_income_household'])
+joined['Price_Income'] = (joined['value'] / joined['avg_income_household'])
 # joined['Price_Income'] = joined.Price_Income.round(decimals=2)
 ```
 |       date |    metro_area |  value | avg_income_household | Price_Income |
@@ -206,7 +206,7 @@ joined['Price_Income'] = (joined['value']/joined['avg_income_household'])
 
 ![Price to Income](./images/Price_to_Income.png)
 
-Year over year the most expensive market to live in was Denver and the least expesnive market was Toledo.  In 2021, Madison and Minneapolis saw the price to income ratio jump above 3 due to increases in home prices.
+Year over year the most expensive market to live in was Denver and the least expensive market was Toledo.  In 2021, Madison and Minneapolis saw the price to income ratio jump above 3 due to increases in home prices.
 
 
 ## Compare the list and sale price to find if buyers are buying at a premium or getting a discount
