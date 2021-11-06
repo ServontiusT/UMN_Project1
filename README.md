@@ -275,4 +275,6 @@ Looking at the plot above, we can see that on average, houses on Zillow do not s
 ---
 
 >1. The main issue that we needed to resolve was working with GitHub fixing a merge conflict.  One of the local repos was pushed to the main branch instead of the individual branch.  This affected the data_collector.ipynb file and caused a merge conflict.  We resolved the merge conflicts in the GitHub GUI.  Once those were fixed we then pushed the correct files to local repo.
->2. We would have like to create dataframe to predict future home prices, if the increase in prices in the last 18 months had any correlation with the COVID 19 pandemic and if potentailly there will be a market correction in the near future.
+>2. The sale price data looked back to 2008; however, the inventory and list price data data only looked back to 2017.  While we had a lot a data to go off some of it was less complete than others.  Therefore, we had to modify how far back we looked.
+>3. On the correlation visualization we wanted to reflect the line charts on a singe plot to show the correlation between the list price and amount of houses available.  There wasn't clean code to reflect that image.
+>3. We would have like to create dataframe to predict future home prices, if the increase in prices in the last 18 months had any correlation with the COVID 19 pandemic and if potentailly there will be a market correction in the near future.
