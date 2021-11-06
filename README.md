@@ -70,7 +70,7 @@ To compile our data we used Glob function.  In Python, the glob module is used t
 
 ---
 
-Determine the seasonality for each metro area by reading in the Inventory CVS's for each Metro Area
+Determine the seasonality for each metro area by reading in the Inventory CSV's for each Metro Area
 
 ```python
 # Set the path for the csv files
